@@ -1,0 +1,17 @@
+[Unit]
+
+Description=Gunicorn Daemon for FastAPI rembg
+
+After=network.target
+
+
+[Service]
+
+WorkingDirectory=/home/rembgtest
+
+ExecStart=/home/rembgtest/env_rembg/bin/gunicorn -c gunicorn_conf.py main:app
+
+
+[Install]
+
+WantedBy=multi-user.target
