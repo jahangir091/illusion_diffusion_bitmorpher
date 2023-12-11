@@ -11,7 +11,6 @@ import logging
 import logging.config
 
 from fastapi import FastAPI, Body
-import rembg
 from fastapi.middleware.cors import CORSMiddleware
 from time import gmtime, strftime
 
@@ -61,7 +60,7 @@ models = [
     "isnet-anime",
 ]
 
-@app.post("/sdapi/ai/rembg")
+@app.post("/sdapi/ai/illusion")
 async def rembg_remove(
     input_image: str = Body("", title='rembg input image'),
     prompt: str = Body("", title='prompt'),
@@ -81,7 +80,7 @@ async def rembg_remove(
     image = inference(
         control_image=input_image,
         controlnet_conditioning_scale=1.2,  # illusion strength
-        prompt=prompt,
+        prompt=prompt if prompt else "landscape of a forest, bright sky, vibrant colors",
         negative_prompt='low quality',
         guidance_scale=7.5,
         sampler="Euler",  # Model or sampler "DPM++ Karras SDE"
@@ -92,7 +91,7 @@ async def rembg_remove(
 
     )
 
-    output_image = encode_pil_to_base64(image).decode("utf-8")
+    output_image = encode_pil_to_base64(image[0]).decode("utf-8")
 
     print("time taken: {0}".format(time.time()-start_time))
 

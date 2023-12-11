@@ -7,7 +7,7 @@ def get_project_name():
     return cwd.split('/')[-1]
 
 
-bind = "0.0.0.0:8000"
+bind = "0.0.0.0:8001"
 
 # Worker Options
 # workers = cpu_count() + 1
