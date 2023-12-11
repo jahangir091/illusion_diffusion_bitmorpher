@@ -80,15 +80,16 @@ async def rembg_remove(
     input_image = decode_base64_to_image(input_image)
     image = inference(
         control_image=input_image,
+        controlnet_conditioning_scale=1.2,  # illusion strength
         prompt=prompt,
-        negative_prompt='',
-        guidance_scale=8.0,
-        controlnet_conditioning_scale=1,
-        control_guidance_start=1,
-        control_guidance_end=1,
-        upscaler_strength=0.5,
+        negative_prompt='low quality',
+        guidance_scale=7.5,
+        sampler="Euler",  # Model or sampler "DPM++ Karras SDE"
+        control_guidance_start=0,
+        control_guidance_end=1.0,
+        upscaler_strength=1.0,
         seed=-1,
-        sampler="DPM++ Karras SDE"
+
     )
 
     output_image = encode_pil_to_base64(image).decode("utf-8")
