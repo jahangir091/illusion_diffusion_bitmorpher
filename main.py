@@ -83,7 +83,8 @@ async def rembg_remove(
         prompt=prompt if prompt else "landscape of a forest, bright sky, vibrant colors",
         negative_prompt='low quality',
         guidance_scale=7.5,
-        sampler="Euler",  # Model or sampler "DPM++ Karras SDE"
+        # sampler="Euler",  # Model or sampler "DPM++ Karras SDE"
+        sampler="DPM++ Karras SDE",  # Model or sampler "DPM++ Karras SDE"
         control_guidance_start=0,
         control_guidance_end=1.0,
         upscaler_strength=1.0,
