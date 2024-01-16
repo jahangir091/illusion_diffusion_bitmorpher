@@ -99,6 +99,8 @@ def inference(
     upscaler_strength: float = 0.5,
     seed: int = -1,
     sampler = "DPM++ Karras SDE",
+    num_inference_steps: int = 30,
+    resize_to: float = 2.0,
     progress = gr.Progress(track_tqdm=True)
 ):
     if prompt is None or prompt == "":
@@ -125,8 +127,8 @@ def inference(
         num_inference_steps=30,
         output_type="latent"
     )
-    control_image_large = center_crop_resize(control_image, (1024, 1024))
-    upscaled_latents = upscale(out, "nearest-exact", 2)
+    control_image_large = center_crop_resize(control_image, (512*resize_to, 512*resize_to))
+    upscaled_latents = upscale(out, "nearest-exact", resize_to)
     out_image = image_pipe(
         prompt=prompt,
         negative_prompt=negative_prompt,
@@ -134,7 +136,7 @@ def inference(
         image=upscaled_latents,
         guidance_scale=float(guidance_scale),
         generator=generator,
-        num_inference_steps=30,
+        num_inference_steps=num_inference_steps,
         strength=upscaler_strength,
         control_guidance_start=float(control_guidance_start),
         control_guidance_end=float(control_guidance_end),
@@ -157,7 +159,9 @@ with gr.Blocks(css=css) as app:
         with gr.Column():
             control_image = gr.Image(label="Upload QR code", type="pil", elem_id="control_image")
             controlnet_conditioning_scale = gr.Slider(minimum=0.0, maximum=2.0, step=0.01, value=1.2, label="Prompt strength", elem_id="illusion_strength")
-            
+            num_inference_steps = gr.Slider(minimum=0, maximum=100, step=1, value=30, label="number of inference steps", elem_id="num_inference_steps")
+            resize_to = gr.Slider(minimum=1, maximum=2, step=0.5, value=2, label="resize image to", elem_id="resize_image")
+
             prompt = gr.Textbox(label="Prompt", elem_id="prompt")
             negative_prompt = gr.Textbox(label="Negative Prompt", value="low quality", elem_id="negative_prompt")
             with gr.Accordion(label="Advanced Options", open=False):
@@ -175,16 +179,16 @@ with gr.Blocks(css=css) as app:
 
     prompt.submit(
         inference,
-        inputs=[control_image, prompt, negative_prompt, guidance_scale, controlnet_conditioning_scale, control_start, control_end, strength, seed, sampler],
+        inputs=[control_image, prompt, negative_prompt, guidance_scale, controlnet_conditioning_scale, control_start, control_end, strength, seed, sampler, num_inference_steps, resize_to],
         outputs=[result_image, seed]
     )
     run_btn.click(
         inference,
-        inputs=[control_image, prompt, negative_prompt, guidance_scale, controlnet_conditioning_scale, control_start, control_end, strength, seed, sampler],
+        inputs=[control_image, prompt, negative_prompt, guidance_scale, controlnet_conditioning_scale, control_start, control_end, strength, seed, sampler, num_inference_steps, resize_to],
         outputs=[result_image, seed]
     )
   
 app.queue(max_size=21)
 
 if __name__ == "__main__":
-    app.launch(share=True)
+    app.launch(share=False, server_name='0.0.0.0', server_port=8006)
