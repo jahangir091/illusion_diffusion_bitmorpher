@@ -3,7 +3,7 @@ uvicorn[standard]
 gunicorn
 piexif
 
-
+# ----------------------- illusion related requirements-----------------------------------------------------------------
 diffusers
 transformers
 accelerate
