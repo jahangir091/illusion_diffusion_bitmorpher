@@ -45,7 +45,7 @@ with open(templates_file) as f:
     template_file_contents = f.read()
     templates_dict = json.loads(template_file_contents)
 
-app = FastAPI()
+app = FastAPI(docs_url="/docs")
 app.illusion_templates = templates_dict
 origins = ["*"]
 app.add_middleware(
