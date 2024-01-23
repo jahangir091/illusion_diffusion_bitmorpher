@@ -127,7 +127,7 @@ def inference(
         num_inference_steps=30,
         output_type="latent"
     )
-    control_image_large = center_crop_resize(control_image, (512*resize_to, 512*resize_to))
+    control_image_large = center_crop_resize(control_image, (int(512*resize_to), int(512*resize_to)))
     upscaled_latents = upscale(out, "nearest-exact", resize_to)
     out_image = image_pipe(
         prompt=prompt,
