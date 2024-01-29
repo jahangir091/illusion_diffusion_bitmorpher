@@ -155,6 +155,31 @@ async def illusion_diffusion(
     }
 
 
+@app.get("/sdapi/ai/illusion-diffusion/templates")
+async def illusion_diffusion_templates():
+    illusion_templates_url = "http://172.105.54.227/media/giff/illusion_templates"
+    templates = app.illusion_templates
+    template_response = []
+    for template_name, template in templates.items():
+        del template['prompt']
+        del template['negative_prompt']
+        del template['steps']
+        del template['prompt_strength']
+        del template['readability_to_creative_scale']
+        del template['sampler']
+        del template['thumbnail_url']
+        template['template_name'] = template_name
+        template['orig_thumbnail'] = illusion_templates_url + '/original/' + template_name + '.jpg'
+        template['square_thumbnail'] = illusion_templates_url + '/square/' + template_name + '.jpg'
+        template_response.append(template)
+
+    return {
+        "success": True,
+        "message": "Returned output successfully",
+        "templates": template_response
+    }
+
+
 import uvicorn
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8006)
