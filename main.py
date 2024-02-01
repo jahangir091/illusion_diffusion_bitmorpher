@@ -110,12 +110,21 @@ async def illusion_diffusion(
 @app.post("/sdapi/ai/illusion-diffusion")
 async def illusion_diffusion(
         input_image: str = Body("", title='rembg input image'),
-        template_name: str = Body("", title='prompt'),
+        template_name: str = Body("", title='template name'),
+        prompt: str = Body("", title='prompt'),
 ):
-    if not input_image or not template_name:
+    if not input_image:
         return{
             "success": False,
-            "message": "Input image or template_name not found",
+            "message": "Input image not found",
+            "server_hit_time": '',
+            "server_process_time": '',
+            "output_image": ''
+        }
+    if not template_name or not prompt:
+        return {
+            "success": False,
+            "message": "Please provide template name or prompt",
             "server_hit_time": '',
             "server_process_time": '',
             "output_image": ''
@@ -124,7 +133,11 @@ async def illusion_diffusion(
     start_time = time.time()
     print("time now: {0} ".format(strftime("%Y-%m-%d %H:%M:%S", gmtime())))
     input_image = decode_base64_to_image(input_image)
-    template = app.illusion_templates[template_name]
+    if template_name:
+        template = app.illusion_templates[template_name]
+    else:
+        template = app.illusion_templates['planet']
+        template['prompt'] = prompt
     image = inference(
         control_image=input_image,
         controlnet_conditioning_scale=template['prompt_strength'],  # illusion strength
