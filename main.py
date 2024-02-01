@@ -121,7 +121,7 @@ async def illusion_diffusion(
             "server_process_time": '',
             "output_image": ''
         }
-    if not template_name or not prompt:
+    if not template_name and not prompt:
         return {
             "success": False,
             "message": "Please provide template name or prompt",
