@@ -112,7 +112,7 @@ async def illusion_diffusion(
         input_image: str = Body("", title='rembg input image'),
         template_name: str = Body("", title='template name'),
         prompt: str = Body("", title='prompt'),
-        seed: int = Body("", title='seed'),
+        seed: bool = Body("", title='seed'),
 ):
     if not input_image:
         return{
@@ -149,7 +149,7 @@ async def illusion_diffusion(
         control_guidance_start=0,
         control_guidance_end=1.0,
         upscaler_strength=1.0,
-        seed=seed if seed else 202134,
+        seed=-1 if seed else 202134,
         num_inference_steps=template['steps'],
         resize_to=2.0,
     )
