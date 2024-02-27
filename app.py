@@ -62,6 +62,21 @@ def center_crop_resize(img, output_size=(512, 512)):
 
     return img
 
+def resize_with_ratio(img, resize_to=1):
+    width, height = img.size
+    if resize_to > 1:
+        return img.resize((width*resize_to, height*resize_to))
+    # base_size = 512
+    # if width > height:
+    #     w_percent = (base_size / float(img.size[0]))
+    #     new_height = int((float(img.size[1]) * float(w_percent)))
+    #     img = img.resize((base_size, new_height))
+    # else:
+    #     h_percent = (base_size / float(img.size[1]))
+    #     new_width = int((float(img.size[0]) * float(h_percent)))
+    #     img = img.resize((new_width, base_size))
+    return img
+
 def common_upscale(samples, width, height, upscale_method, crop=False):
         if crop == "center":
             old_width = samples.shape[3]

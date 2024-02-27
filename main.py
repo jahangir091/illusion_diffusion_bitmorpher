@@ -6,6 +6,7 @@ from PIL import Image
 from io import BytesIO
 import base64
 import io
+import uuid
 import piexif
 import piexif.helper
 from datetime import datetime, timezone
@@ -19,6 +20,14 @@ from time import gmtime, strftime
 from app import inference
 
 logger = logging.getLogger(__name__)
+
+
+def get_img_path():
+    current_dir = '/tmp'
+    img_directory = current_dir + '/.temp/illusion_diffusion/'
+    os.makedirs(img_directory, exist_ok=True)
+    img_file_name = uuid.uuid4().hex[:20] + '.jpg'
+    return img_directory + img_file_name
 
 
 def decode_base64_to_image(img_string):
@@ -112,23 +121,21 @@ async def illusion_diffusion(
         input_image: str = Body("", title='rembg input image'),
         template_name: str = Body("", title='template name'),
         prompt: str = Body("", title='prompt'),
-        seed: bool = Body("", title='seed'),
+        seed: bool = Body(False, title='seed'),
 ):
     if not input_image:
         return{
             "success": False,
             "message": "Input image not found",
-            "server_hit_time": '',
             "server_process_time": '',
-            "output_image": ''
+            "output_image_url": ''
         }
     if not template_name and not prompt:
         return {
             "success": False,
             "message": "Please provide template name or prompt",
-            "server_hit_time": '',
             "server_process_time": '',
-            "output_image": ''
+            "output_image_url": ''
         }
     utc_time = datetime.now(timezone.utc)
     start_time = time.time()
@@ -154,18 +161,19 @@ async def illusion_diffusion(
         resize_to=2.0,
     )
 
-    output_image = encode_pil_to_base64(image[0]).decode("utf-8")
+    # output_image = encode_pil_to_base64(image[0]).decode("utf-8")
+    out_image_path = get_img_path()
+    image[0].save(out_image_path)
 
-    print("time taken: {0}".format(time.time()-start_time))
+    print("server process time: {0}".format(time.time()-start_time))
 
     return {
         "success": True,
         "message": "Returned output successfully",
-        "server_hit_time": str(utc_time),
         "server_process_time": time.time()-start_time,
-        "output_image": output_image
+        "output_image_url": out_image_path
     }
 
 
 if __name__ == '__main__':
-    uvicorn.run(app, host="0.0.0.0", port=8006)
+    uvicorn.run(app, host="0.0.0.0", port=8005)
