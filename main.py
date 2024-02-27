@@ -116,7 +116,12 @@ async def illusion_diffusion(
     }
 
 
-@app.post("/sdapi/ai/illusion-diffusion")
+@app.get("/ai/api/v1/illusion-server-test")
+def upscaler_server_test():
+    return {"Server is working fine!"}
+
+
+@app.post("/ai/api/v1/illusion-diffusion")
 async def illusion_diffusion(
         input_image: str = Body("", title='rembg input image'),
         template_name: str = Body("", title='template name'),
@@ -171,7 +176,7 @@ async def illusion_diffusion(
         "success": True,
         "message": "Returned output successfully",
         "server_process_time": time.time()-start_time,
-        "output_image_url": out_image_path
+        "output_image_url": 'media/' + out_image_path.split('/')[-1]
     }
 
 
