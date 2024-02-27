@@ -118,7 +118,7 @@ async def illusion_diffusion(
 
 @app.get("/ai/api/v1/illusion-server-test")
 def upscaler_server_test():
-    return {"Server is working fine!"}
+    return {"Illusion diffusion server is working fine!"}
 
 
 @app.post("/ai/api/v1/illusion-diffusion")
