@@ -49,7 +49,7 @@ def encode_pil_to_base64(image):
     return base64.b64encode(bytes_data)
 
 
-illusion_templates_res = requests.get('http://172.105.54.227/media/giff/illusion_templates/illusion_templates.json')
+illusion_templates_res = requests.get('http://5.78.64.51/media/giff/illusion_templates/illusion_templates.json')
 templates_dict = illusion_templates_res.json()
 
 app = FastAPI(docs_url="/docs")
