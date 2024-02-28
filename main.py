@@ -123,12 +123,12 @@ def illusion_server_test():
 
 @app.post("/ai/api/v1/illusion-diffusion")
 async def illusion_diffusion(
-        input_image: str = Body("", title='illusion input image'),
+        image: str = Body("", title='illusion input image'),
         template_name: str = Body("", title='illusion template name'),
         prompt: str = Body("", title='user prompt'),
         seed: bool = Body(False, title='seed, if True then seed will be -1'),
 ):
-    if not input_image:
+    if not image:
         return{
             "success": False,
             "message": "Input image not found",
@@ -145,7 +145,7 @@ async def illusion_diffusion(
     utc_time = datetime.now(timezone.utc)
     start_time = time.time()
     print("time now: {0} ".format(strftime("%Y-%m-%d %H:%M:%S", gmtime())))
-    input_image = decode_base64_to_image(input_image)
+    input_image = decode_base64_to_image(image)
     if template_name:
         template = app.illusion_templates[template_name]
     else:
@@ -167,7 +167,8 @@ async def illusion_diffusion(
     )
 
     # output_image = encode_pil_to_base64(image[0]).decode("utf-8")
-    out_image_path = get_img_path('/illusion_diffusion/')
+    out_images_directory_name = '/illusion_diffusion_images/'
+    out_image_path = get_img_path(out_images_directory_name)
     image[0].save(out_image_path)
 
     print("server process time: {0}".format(time.time()-start_time))
@@ -176,7 +177,7 @@ async def illusion_diffusion(
         "success": True,
         "message": "Returned output successfully",
         "server_process_time": time.time()-start_time,
-        "output_image_url": 'media/' + out_image_path.split('/')[-1]
+        "output_image_url": 'media' + out_images_directory_name + out_image_path.split('/')[-1]
     }
 
 
