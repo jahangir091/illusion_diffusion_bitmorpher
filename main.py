@@ -66,7 +66,7 @@ app.add_middleware(
 
 @app.post("/sdapi/ai/illusion")
 async def illusion_diffusion(
-        input_image: str = Body("", title='rembg input image'),
+        input_image: str = Body("", title='input image'),
         prompt: str = Body("", title='prompt'),
         prompt_strength: float = Body(1.2, title='prompt strength'),
         guidance_scale: float = Body(7.5, title='guidance scale'),
@@ -118,15 +118,15 @@ async def illusion_diffusion(
 
 @app.get("/ai/api/v1/illusion-server-test")
 def illusion_server_test():
-    return {"Illusion diffusion server is working fine!"}
+    return {"Illusion diffusion server is working fine. OK!"}
 
 
 @app.post("/ai/api/v1/illusion-diffusion")
 async def illusion_diffusion(
-        input_image: str = Body("", title='rembg input image'),
-        template_name: str = Body("", title='template name'),
-        prompt: str = Body("", title='prompt'),
-        seed: bool = Body(False, title='seed'),
+        input_image: str = Body("", title='illusion input image'),
+        template_name: str = Body("", title='illusion template name'),
+        prompt: str = Body("", title='user prompt'),
+        seed: bool = Body(False, title='seed, if True then seed will be -1'),
 ):
     if not input_image:
         return{
