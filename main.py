@@ -22,9 +22,9 @@ from app import inference
 logger = logging.getLogger(__name__)
 
 
-def get_img_path():
+def get_img_path(directory_name):
     current_dir = '/tmp'
-    img_directory = current_dir + '/.temp/illusion_diffusion/'
+    img_directory = current_dir + '/.temp' + directory_name
     os.makedirs(img_directory, exist_ok=True)
     img_file_name = uuid.uuid4().hex[:20] + '.jpg'
     return img_directory + img_file_name
@@ -167,7 +167,7 @@ async def illusion_diffusion(
     )
 
     # output_image = encode_pil_to_base64(image[0]).decode("utf-8")
-    out_image_path = get_img_path()
+    out_image_path = get_img_path('/illusion_diffusion/')
     image[0].save(out_image_path)
 
     print("server process time: {0}".format(time.time()-start_time))
