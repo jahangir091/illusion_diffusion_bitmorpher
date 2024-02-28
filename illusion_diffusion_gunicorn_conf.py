@@ -10,6 +10,9 @@ bind = 'unix:/run/illusion_diffusion/gunicorn.sock'
 workers = 1
 worker_class = 'uvicorn.workers.UvicornWorker'
 
+# Worker timeout
+timeout = 120
+
 # Logging Options
 loglevel = 'debug'
 accesslog = '/var/log/illusion_diffusion/access.log'
